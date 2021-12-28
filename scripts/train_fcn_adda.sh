@@ -1,5 +1,5 @@
 
-gpu=1
+gpu=0,1,2,3
 
 ######################
 # loss weight params #
@@ -13,7 +13,7 @@ lambda_g=0.1
 # train params #
 ################
 max_iter=100000
-crop=768
+crop=256
 snapshot=5000
 batch=1
 
@@ -25,7 +25,7 @@ discrim='discrim_score'
 ########
 src='cyclegta5'
 tgt='cityscapes'
-datadir='/x/'
+datadir=''
 
 
 resdir="results/${src}_to_${tgt}/adda_sgd/${weight_share}_nolsgan_${discrim}"
