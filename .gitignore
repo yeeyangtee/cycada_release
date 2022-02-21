@@ -4,3 +4,6 @@ scripts/.ipynb_checkpoints/
 
 *.zip
 *.pth
+
+images
+data

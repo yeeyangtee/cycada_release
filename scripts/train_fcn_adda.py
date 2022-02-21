@@ -184,7 +184,9 @@ def main(output, dataset, datadir, lr, momentum, snapshot, downscale, cls_weight
     while iteration < max_iter:
         
         for im_s, im_t, label_s, label_t in loader:
-            
+            print('label_s',label_s)
+            print('label_t',label_t)
+            break
             if iteration > max_iter:
                 break
            
