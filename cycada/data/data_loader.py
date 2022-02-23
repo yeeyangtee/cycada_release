@@ -30,12 +30,12 @@ def load_data(name, dset, batch=64, rootdir='', num_channels=3,
     return loader
 
 def get_transform_dataset(dataset_name, rootdir, net_transform, downscale):
-    user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
+    # user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
     transform, target_transform = get_transform2(dataset_name, net_transform, downscale)
     return get_fcn_dataset(dataset_name, rootdir, transform=transform,
             target_transform=target_transform)
 
-sizes = {'cityscapes': 1024, 'gta5': 1024, 'cyclegta5': 1024}
+sizes = {'cityscapes': 1024, 'gta5': 1024, 'cyclegta5': 1024, 'stratix':128,'cyclone':128}
 def get_orig_size(dataset_name):
     "Size of images in the dataset for relative scaling."
     try:

@@ -32,8 +32,8 @@ class RandomCrop(object):
         th, tw = self.size
         for tensor in tensors:
             if h is None and w is None:
-                _, h, w = tensor.size()
-            elif tensor.size()[-2:] != (h, w):
+                _, h, w = tensor.size
+            elif tensor.size[-2:] != (h, w):
                 print(tensor.size(), (h, w))
                 raise ValueError('Images must be same size')
         if w == tw and h == th:
@@ -79,11 +79,14 @@ class RandomHorizontalFlip(object):
 def augment_collate(batch, crop=None, halfcrop=None, flip=True):
     transforms = []
     if crop is not None:
-        transforms.append(RandomCrop(crop))
+        transforms.append(torchvision.transforms.RandomCrop(crop))
     if halfcrop is not None:
         transforms.append(HalfCrop())
     if flip:
         transforms.append(RandomHorizontalFlip())
     transform = torchvision.transforms.Compose(transforms)
+    for x in batch:
+        print(type(x))
+        print(x[0].shape,x[1].shape)
     batch = [transform(x) for x in batch]
     return torch.utils.data.dataloader.default_collate(batch)

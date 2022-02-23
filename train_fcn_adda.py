@@ -1,3 +1,6 @@
+# import os
+# os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
+
 import logging
 import os
 import os.path
@@ -55,7 +58,10 @@ def forward_pass(net, discriminator, im, requires_grad=False, discrim_feat=False
 def supervised_loss(score, label, weights=None):
     loss_fn_ = torch.nn.NLLLoss(weight=weights, size_average=True, 
             ignore_index=255)
-    loss = loss_fn_(F.log_softmax(score, dim=1), label)
+    label = label.squeeze().long()
+    loss_fn = torch.nn.CrossEntropyLoss()
+    loss = loss_fn(score, label)
+    # loss = loss_fn_(F.log_softmax(score, dim=1), label)
     return loss
    
 def discriminator_loss(score, target_val, lsgan=False):
@@ -96,7 +102,7 @@ def seg_accuracy(score, label, num_cls):
 @click.option('--weights_init', type=click.Path(exists=True))
 @click.option('--model', default='fcn8s', type=click.Choice(models.keys()))
 @click.option('--lsgan/--no_lsgan', default=False)
-@click.option('--num_cls', type=int, default=19)
+@click.option('--num_cls', type=int, default=3)
 @click.option('--gpu', default='0')
 @click.option('--max_iter', default=10000)
 @click.option('--lambda_d', default=1.0)
@@ -128,7 +134,6 @@ def main(output, dataset, datadir, lr, momentum, snapshot, downscale, cls_weight
     writer = SummaryWriter(log_dir=logdir)
 
 
-    os.environ['CUDA_VISIBLE_DEVICES'] = gpu
     config_logging()
     print('Train Discrim Only', train_discrim_only)
     net = get_model(model, num_cls=num_cls, pretrained=True, weights_init=weights_init,
@@ -184,9 +189,9 @@ def main(output, dataset, datadir, lr, momentum, snapshot, downscale, cls_weight
     while iteration < max_iter:
         
         for im_s, im_t, label_s, label_t in loader:
-            print('label_s',label_s)
-            print('label_t',label_t)
-            break
+            # print('label_s',label_s)
+            # print('label_t',label_t)
+            # break
             if iteration > max_iter:
                 break
            
@@ -382,8 +387,8 @@ def main(output, dataset, datadir, lr, momentum, snapshot, downscale, cls_weight
                 print('No suitable discriminator found -- returning.')
                 torch.save(net.state_dict(), 
                         '{}/net-iter{}.pth'.format(output, iteration))
-                iteration = max_iter # make sure outside loop breaks
-                break
+                # iteration = max_iter # make sure outside loop breaks
+                # break
 
     writer.close()
 
